@@ -4,52 +4,14 @@ var alien_types = [
     {code:16,level:0,points:1,crystal_drop:0},
     {code:17,level:0,points:1,crystal_drop:0},
   ];
-game.modding.commands.timeout = function(req){
-  let args = req.replace(/^\s+/, "").replace(/\s+/, " ").split(" "), id = Number(args[1] || "NaN");  
-  game.ships[id].custom.a = !game.ships[id].custom.a;
-  game.ships[id].set({x:980,y:-980,type:192,vx:0,vy:0,crystals:0,shield:100,collider:true});
-  for (let i=0; i<ids.length; i++) ship.setUIComponent({id:ids[i],visible:false});    
-  game.ships[id].setUIComponent({
-    id: "a",
-    position: [25, 85, 50, 25],
-    visible: !game.ships[id].custom.a,
-    components: [{
-        type: "Welcome",
-        position: [0, 0, 100, 20],
-        value: "You are in timeout!",
-        color: "#ffbbbb",
-      },
-    ],
-  });
-};
-
-//loli (id)
-game.modding.commands.weebify = function(req){
-  let args = req.replace(/^\s+/, "").replace(/\s+/, " ").split(" "), id = Number(args[1] || "NaN");  
-  game.ships[id].custom.a = !game.ships[id].custom.a;
-  game.ships[id].set({x:-900,y:-900,vx:0,vy:0,type:1912,crystals:0,shield:100,collider:true,idle:true});
-  for (let i=0; i<ids.length; i++) ship.setUIComponent({id:ids[i],visible:false});            
-  game.ships[id].setUIComponent({
-    id: "a",
-    position: [25, 85, 50, 25],
-    visible: !game.ships[id].custom.a,
-    components: [{
-        type: "text",
-        position: [0, 0, 100, 20],
-        value: "Weebifying in process....!",
-        color: "#ffbbbb",
-      },
-    ]
-  });
-};
-var Rond = {
-  id: "Rond",
+var creatername = {
+  id: "creatername",
   obj: "https://starblast.data.neuronality.com/mods/objects/plane.obj",
   emissive:"https://raw.githubusercontent.com/STARBLASTA/background/main/Creadit%20by%20basit.png",
 };
 game.setObject({
-  id: "Rond",
-  type: Rond,
+  id: "creatername",
+  type: creatername,
   position:{x:2,y:0,z:-6.5},
   scale:{x:80,y:80,z:0},
   rotation:{x:-160.1,y:0,z:0}
@@ -60,15 +22,6 @@ playerList = function(){
     echo(i+": "+game.ships[i].name);  
   } 
   echo("\n");
-};
-
-findPlayerByName = function(name){
-	for (let i=0; i<game.ships.length; i++){
-		if (game.ships[i].name == name){
-		  return game.ships[i];
-		}
-	}
-	return null;
 };
 var vocabulary = [
   { text: "You", icon: "\u004e", key: "O" },
@@ -127,7 +80,6 @@ this.options = {
   map_size:                            20,
   survival_level:                       8,
   starting_ship_maxed:                true, 
-  asteroids_strength:                 999999,
   crystal_value:                      1.5,
   crystal_drop:                        10,
   map_name:                    "Aim Training mod",
@@ -155,7 +107,8 @@ this.tick = function(game) {
       game.addAlien(alien) ;
     }
   }
-} ;
+  if (game.step % 180 === 0) playerList();
+};
 
 game.modding.tick = function (t) {
   this.game.tick(t);
@@ -221,26 +174,10 @@ this.event = function (event, game) {
 
       }  if (component == "A-Speedster"){
         ship.set({type:speedster_ships[speedster_ships.indexOf(ship.type)+1]||speedster_ships[0],crystals:720,shield:500,generator:0,collider:true,stats:88888888});
-      } else if (component == "missiles"){
-        game.addCollectible({code:11,x:ship.x,y:ship.y});
-      } else if (component == "heavy mines"){
-        game.addCollectible({code:21,x:ship.x,y:ship.y});
-      } else if (component == "defend pod"){
-        game.addCollectible({code:42,x:ship.x,y:ship.y});
-      } else if (component == "rockets"){
-        game.addCollectible({code:10,x:ship.x,y:ship.y});
-      } else if (component == "empty"){
-        ship.emptyWeapons();
-      } else if (component == "torpedo"){  
-        game.addCollectible({code:12,x:ship.x,y:ship.y});
-      } else if (component == "battery"){
-        game.addCollectible({code:91,x:ship.x,y:ship.y});
-      } else if (component == "small mine"){
-        game.addCollectible({code:20,x:ship.x,y:ship.y});
       }
-      
     case "ship_spawned":
       ship.set({x:0, y:0,invulnerable:300,type:605,shield:999,crystals:720,collider:true,stats:66666666});//((ship_level||0)**2)*20})
     break;
   }
 };
+
